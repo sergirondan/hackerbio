@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tracker — hackers.bio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>:root{--black:#060608;--deep:#0a0b0f;--surface:#0f1117;--card:#0d0f14;--border:#1a1d26;--green:#00ff88;--green-faint:rgba(0,255,136,0.05);--blue:#00c8ff;--orange:#ff8c42;--text:#e8eaf0;--muted:#6b7280;--dimmer:#3d4350;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'DM Mono',monospace;overflow-x:hidden;cursor:none;}
+.cursor{width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform 0.1s;box-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,136,0.3);}
+.cursor-ring{width:28px;height:28px;border:1px solid rgba(0,255,136,0.35);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:all 0.14s;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.025) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(6,6,8,0.92);backdrop-filter:blur(24px);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--green);text-decoration:none;}.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:36px;list-style:none;}.nav-links a{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.nav-links a:hover{color:var(--text);}.nav-links a.active{color:var(--green);}
+.nav-cta{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--black);background:var(--green);border:none;padding:9px 20px;cursor:none;font-weight:700;transition:background 0.2s;}.nav-cta:hover{background:#fff;}
+.btn-g{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--green);border:none;padding:14px 28px;text-decoration:none;cursor:none;transition:all 0.2s;display:inline-block;}.btn-g:hover{background:#fff;transform:translateY(-1px);}
+.btn-o{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:13px 24px;text-decoration:none;transition:all 0.2s;cursor:none;display:inline-block;}.btn-o:hover{color:var(--text);border-color:var(--dimmer);}
+.slabel{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:10px;}.slabel::before{content:'';width:20px;height:1px;background:var(--green);display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.fi{opacity:0;transform:translateY(16px);transition:opacity 0.55s ease,transform 0.55s ease;}.fi.vis{opacity:1;transform:none;}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.fl{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--green);margin-bottom:5px;}.ft{font-size:10px;color:var(--dimmer);letter-spacing:0.07em;}
+.flinks{display:flex;gap:28px;}.flinks a{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.flinks a:hover{color:var(--green);}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--border);}::-webkit-scrollbar-thumb:hover{background:var(--green);}
+
+/* preview banner */
+.preview-banner{position:fixed;top:57px;left:0;right:0;z-index:190;background:rgba(0,200,255,.08);border-bottom:1px solid rgba(0,200,255,.2);padding:8px 48px;display:flex;align-items:center;justify-content:space-between;}
+.pb-text{font-size:10px;letter-spacing:.08em;color:var(--blue);display:flex;align-items:center;gap:8px;}.pb-text::before{content:'◎';animation:blink 1.5s ease infinite;color:var(--blue);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.pb-cta{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--black);background:var(--blue);border:none;padding:6px 16px;cursor:none;font-weight:700;transition:background .2s;}.pb-cta:hover{background:#fff;}
+/* app shell */
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;padding-top:95px;}
+/* sidebar */
+.sidebar{background:var(--deep);border-right:1px solid var(--border);padding:24px 0;position:sticky;top:95px;height:calc(100vh - 95px);overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar::-webkit-scrollbar{display:none;}
+.score-ring{padding:24px;text-align:center;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.ring-svg{width:80px;height:80px;margin:0 auto 10px;}
+.score-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--green);letter-spacing:-.04em;display:block;}
+.score-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.nav-section{padding:0 12px;margin-bottom:4px;}
+.nav-sec-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);padding:10px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;font-size:11px;color:var(--muted);cursor:none;transition:all .2s;text-decoration:none;border:1px solid transparent;}
+.nav-item:hover{color:var(--text);background:var(--surface);}
+.nav-item.on{color:var(--green);background:var(--green-faint);border-color:rgba(0,255,136,.12);}
+.nav-icon{font-size:13px;width:18px;text-align:center;flex-shrink:0;}
+.public-url{margin-top:auto;padding:16px;border-top:1px solid var(--border);}
+.pub-label{font-size:9px;letter-spacing:.08em;color:var(--dimmer);margin-bottom:4px;}
+.pub-link{font-size:10px;color:var(--green);letter-spacing:.04em;}
+/* main dashboard */
+.dash-main{padding:32px 36px;background:var(--black);}
+.dash-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.dash-greeting{font-family:'Instrument Serif',serif;font-size:28px;letter-spacing:-.01em;}
+.dash-date{font-size:10px;color:var(--dimmer);letter-spacing:.07em;margin-top:3px;}
+.log-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--black);background:var(--green);border:none;padding:10px 20px;cursor:none;font-weight:700;transition:background .2s;}.log-btn:hover{background:#fff;}
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);margin-bottom:1px;}
+.kpi{background:var(--card);padding:20px 18px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:.5;}
+.kpi-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--green);display:block;letter-spacing:-.04em;margin-bottom:4px;}
+.kpi-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
+.kpi-delta{font-size:9px;display:flex;align-items:center;gap:4px;}.kpi-delta.up{color:var(--green);}.kpi-delta.dn{color:var(--red);}
+/* two-col layout */
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:1px;background:var(--border);margin-top:1px;}
+.panel{background:var(--card);padding:24px;}
+.panel-title{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:18px;display:flex;align-items:center;gap:8px;}.panel-title::before{content:'';width:14px;height:1px;background:var(--green);display:block;}
+/* chart */
+.chart-wrap{position:relative;}
+.chart-svg{width:100%;height:120px;}
+.chart-legend{display:flex;gap:20px;margin-top:8px;}
+.cleg{font-size:9px;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:6px;}.cleg::before{content:'';width:16px;height:1px;display:block;}
+.cleg.g::before{background:var(--green);}.cleg.b::before{background:var(--blue);}
+.period-tabs{display:flex;gap:2px;margin-bottom:14px;}
+.ptab{font-size:9px;letter-spacing:.08em;padding:5px 10px;background:none;border:1px solid var(--border);color:var(--muted);cursor:none;transition:all .15s;}.ptab.on{background:var(--green);color:var(--black);border-color:var(--green);font-weight:700;}
+/* supplements */
+.supp-list{display:flex;flex-direction:column;gap:8px;}
+.supp-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);cursor:none;transition:border-color .2s;}.supp-item:hover{border-color:var(--green);}
+.supp-check{width:16px;height:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .15s;}
+.supp-check.done{background:var(--green);border-color:var(--green);color:var(--black);}
+.supp-name{font-size:11px;color:var(--text);flex:1;}
+.supp-dose{font-size:9px;color:var(--dimmer);font-family:'Space Mono',monospace;}.supp-time{font-size:9px;color:var(--green);padding:2px 7px;border:1px solid rgba(0,255,136,.2);margin-left:auto;}
+/* experiments */
+.exp-list{display:flex;flex-direction:column;gap:8px;}
+.exp-card{background:var(--surface);border:1px solid var(--border);padding:14px;}
+.exp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.exp-name{font-size:12px;color:var(--text);}
+.exp-status{display:flex;align-items:center;gap:5px;font-size:9px;}.exp-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s ease infinite;}
+.exp-hyp{font-size:10px;color:var(--muted);line-height:1.6;margin-bottom:6px;}
+.exp-prog{height:2px;background:var(--border);position:relative;}.exp-fill{position:absolute;top:0;left:0;height:100%;background:var(--green);}
+.exp-days{font-size:9px;color:var(--dimmer);margin-top:4px;}
+/* fasting timer */
+.fasting-card{background:var(--surface);border:1px solid var(--border);padding:20px;text-align:center;}
+.fast-time{font-family:'Space Mono',monospace;font-size:36px;color:var(--green);letter-spacing:-.04em;display:block;margin:8px 0;}
+.fast-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.fast-bar{height:3px;background:var(--border);margin:14px 0;position:relative;overflow:hidden;}
+.fast-fill{position:absolute;top:0;left:0;height:100%;background:var(--green);width:67%;}
+.fast-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--dimmer);letter-spacing:.05em;}
+/* energy bars */
+.energy-bars{display:flex;gap:6px;align-items:flex-end;height:60px;}
+.ebar{flex:1;background:var(--green);opacity:.25;border-radius:1px;}.ebar.on{opacity:.9;}
+.edays{display:flex;gap:6px;margin-top:6px;}
+.eday{flex:1;font-size:8px;text-align:center;color:var(--dimmer);letter-spacing:.04em;}
+/* benchmark */
+.bench-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bench{background:var(--surface);border:1px solid var(--border);padding:12px 14px;}
+.bench-lbl{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.bench-bar{height:4px;background:var(--border);border-radius:2px;position:relative;margin-bottom:5px;}
+.bench-you{position:absolute;top:0;left:0;height:100%;background:var(--green);border-radius:2px;}
+.bench-avg{position:absolute;top:0;left:0;height:100%;background:var(--dimmer);border-radius:2px;}
+.bench-vals{display:flex;justify-content:space-between;font-size:9px;}
+.bvy{color:var(--green);font-family:'Space Mono',monospace;}.bvc{color:var(--dimmer);}
+/* LOG PANEL */
+.log-panel{position:fixed;right:-100%;top:0;bottom:0;width:420px;background:var(--deep);border-left:1px solid var(--border);z-index:300;transition:right .45s cubic-bezier(.25,.46,.45,.94);overflow-y:auto;}
+.log-panel.open{right:0;}
+.log-overlay{position:fixed;inset:0;background:rgba(6,6,8,.65);backdrop-filter:blur(4px);z-index:299;opacity:0;pointer-events:none;transition:opacity .35s;}
+.log-overlay.open{opacity:1;pointer-events:all;}
+.log-header{padding:32px 28px 0;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.log-title{font-family:'Instrument Serif',serif;font-size:24px;}
+.log-close{background:none;border:none;color:var(--muted);cursor:none;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;transition:color .2s;}.log-close:hover{color:var(--green);}
+.log-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 28px;}
+.log-tab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:14px 16px;background:none;border:none;cursor:none;transition:all .2s;border-bottom:2px solid transparent;font-family:'DM Mono',monospace;}
+.log-tab.on{color:var(--green);border-bottom-color:var(--green);}
+.log-body{padding:24px 28px;}
+.log-group{margin-bottom:22px;}
+.log-glabel{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.log-slider{-webkit-appearance:none;width:100%;height:2px;background:var(--border);outline:none;cursor:none;margin:8px 0;}
+.log-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--green);cursor:none;box-shadow:0 0 6px var(--green);}
+.log-val{font-family:'Space Mono',monospace;font-size:14px;color:var(--green);text-align:right;display:block;margin-bottom:4px;}
+.log-save{width:100%;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--green);border:none;padding:14px;cursor:none;transition:background .2s;margin-top:16px;}.log-save:hover{background:#fff;}
+.toast{position:fixed;bottom:32px;right:32px;background:var(--green);color:var(--black);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;padding:13px 22px;z-index:999;transform:translateY(60px);opacity:0;transition:all .4s cubic-bezier(.25,.46,.45,.94);}
+.toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav><a href="index.html" class="nav-logo">hackers<span>.bio</span></a><ul class="nav-links"><li><a href="community.html">Community</a></li><li><a href="blog.html">Research</a></li><li><a href="tracker.html" class="active">Track</a></li><li><a href="shop.html">Shop</a></li></ul><button class="nav-cta" onclick="location.href='tracker.html'">Join Free</button></nav>
+
+<div class="toast" id="toast">✓ Log saved</div>
+<div class="log-overlay" id="logOverlay" onclick="closeLog()"></div>
+<!-- LOG PANEL -->
+<div class="log-panel" id="logPanel">
+  <div class="log-header"><div class="log-title">Log Today</div><button class="log-close" onclick="closeLog()">[ESC] Close</button></div>
+  <div class="log-tabs">
+    <button class="log-tab on" data-sec="sleep">Sleep</button>
+    <button class="log-tab" data-sec="supps">Supps</button>
+    <button class="log-tab" data-sec="energy">Energy</button>
+  </div>
+  <div class="log-body">
+    <div class="log-section" id="sec-sleep">
+      <div class="log-group"><div class="log-glabel">Sleep hours</div><span class="log-val" id="val-shr">7.5h</span><input type="range" class="log-slider" id="shr" min="4" max="12" step="0.5" value="7.5" data-unit="h"></div>
+      <div class="log-group"><div class="log-glabel">HRV (ms)</div><span class="log-val" id="val-shrv">87</span><input type="range" class="log-slider" id="shrv" min="20" max="180" value="87"></div>
+      <div class="log-group"><div class="log-glabel">Resting HR (bpm)</div><span class="log-val" id="val-srhr">48</span><input type="range" class="log-slider" id="srhr" min="38" max="90" value="48"></div>
+      <div class="log-group"><div class="log-glabel">Sleep quality (1-10)</div><span class="log-val" id="val-squal">8</span><input type="range" class="log-slider" id="squal" min="1" max="10" value="8"></div>
+      <button class="log-save">Save Sleep Log →</button>
+    </div>
+    <div class="log-section" id="sec-supps" style="display:none">
+      <div class="log-group"><div class="log-glabel">Morning stack</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">NMN 500mg</span><span class="supp-dose">500mg</span></div>
+          <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">Creatine</span><span class="supp-dose">5g</span></div>
+          <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">D3 + K2</span><span class="supp-dose">5000IU</span></div>
+          <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Alpha-GPC</span><span class="supp-dose">300mg</span></div>
+        </div>
+      </div>
+      <div class="log-group"><div class="log-glabel">Evening stack</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Mg Glycinate</span><span class="supp-dose">400mg</span></div>
+          <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Glycine</span><span class="supp-dose">3g</span></div>
+        </div>
+      </div>
+      <button class="log-save">Save Stack Log →</button>
+    </div>
+    <div class="log-section" id="sec-energy" style="display:none">
+      <div class="log-group"><div class="log-glabel">Energy (1-10)</div><span class="log-val" id="val-seng">8</span><input type="range" class="log-slider" id="seng" min="1" max="10" value="8"></div>
+      <div class="log-group"><div class="log-glabel">Focus (1-10)</div><span class="log-val" id="val-sfoc">7</span><input type="range" class="log-slider" id="sfoc" min="1" max="10" value="7"></div>
+      <div class="log-group"><div class="log-glabel">Stress (1-10)</div><span class="log-val" id="val-sstr">3</span><input type="range" class="log-slider" id="sstr" min="1" max="10" value="3"></div>
+      <button class="log-save">Save Energy Log →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW BANNER -->
+<div class="preview-banner">
+  <div class="pb-text">App Preview — Demo data only. Create a free account to start tracking your own.</div>
+  <button class="pb-cta">Sign Up Free →</button>
+</div>
+
+<!-- APP SHELL -->
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="score-ring">
+      <svg class="ring-svg" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#1a1d26" stroke-width="5"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#00ff88" stroke-width="5" stroke-dasharray="213.6" stroke-dashoffset="32" stroke-linecap="round" transform="rotate(-90 40 40)" opacity="0.9"/>
+      </svg>
+      <span class="score-val">85</span>
+      <span class="score-lbl">Optimization Score</span>
+    </div>
+    <div class="nav-section">
+      <div class="nav-sec-label">Overview</div>
+      <a href="#" class="nav-item on"><span class="nav-icon">◈</span>Dashboard</a>
+      <a href="#" class="nav-item"><span class="nav-icon">🌙</span>Sleep & HRV</a>
+      <a href="#" class="nav-item"><span class="nav-icon">💊</span>My Stack</a>
+      <a href="#" class="nav-item"><span class="nav-icon">🧪</span>Lab Results</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-sec-label">Training</div>
+      <a href="#" class="nav-item"><span class="nav-icon">🏃</span>Fitness</a>
+      <a href="#" class="nav-item"><span class="nav-icon">⚡</span>Energy & Mood</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-sec-label">Advanced</div>
+      <a href="#" class="nav-item"><span class="nav-icon">🔬</span>Experiments</a>
+      <a href="#" class="nav-item"><span class="nav-icon">🏆</span>Challenges</a>
+    </div>
+    <div class="public-url">
+      <div class="pub-label">Your public profile</div>
+      <div class="pub-link">hackers.bio/u/alex</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div>
+        <div class="dash-greeting">Good morning, Alex 👋</div>
+        <div class="dash-date">Tuesday, March 10, 2026</div>
+      </div>
+      <button class="log-btn" onclick="openLog()">+ Log Today</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi"><span class="kpi-label">HRV</span><span class="kpi-val">87ms</span><div class="kpi-delta up">↑ 9ms vs avg</div></div>
+      <div class="kpi"><span class="kpi-label">Sleep</span><span class="kpi-val">7h42</span><div class="kpi-delta up">↑ 18min vs avg</div></div>
+      <div class="kpi"><span class="kpi-label">Resting HR</span><span class="kpi-val">48bpm</span><div class="kpi-delta up">↓ 4bpm vs avg</div></div>
+      <div class="kpi"><span class="kpi-label">Energy</span><span class="kpi-val">8.2/10</span><div class="kpi-delta up">↑ 0.8 vs avg</div></div>
+      <div class="kpi"><span class="kpi-label">Fast Streak</span><span class="kpi-val">16h</span><div class="kpi-delta up">Day 12 🔥</div></div>
+      <div class="kpi"><span class="kpi-label">Stack</span><span class="kpi-val">3/6</span><div class="kpi-delta" style="color:var(--muted)">logged today</div></div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="dash-grid">
+      <!-- Left column -->
+      <div>
+        <!-- HRV + Sleep chart -->
+        <div class="panel" style="border-bottom:1px solid var(--border);">
+          <div class="panel-title">HRV & Sleep — 30 day trend</div>
+          <div class="period-tabs">
+            <button class="ptab on">30D</button>
+            <button class="ptab">90D</button>
+            <button class="ptab">1Y</button>
+          </div>
+          <div class="chart-wrap">
+            <svg class="chart-svg" viewBox="0 0 600 120" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00ff88" stop-opacity=".25"/><stop offset="100%" stop-color="#00ff88" stop-opacity="0"/></linearGradient>
+                <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c8ff" stop-opacity=".2"/><stop offset="100%" stop-color="#00c8ff" stop-opacity="0"/></linearGradient>
+              </defs>
+              <path d="M0,85 C20,80 40,90 60,75 C80,60 100,70 120,65 C140,60 160,55 180,60 C200,65 220,50 240,45 C260,40 280,55 300,48 C320,41 340,35 360,30 C380,25 400,38 420,32 C440,26 460,20 480,18 C500,16 520,22 540,18 C560,14 580,12 600,10" fill="url(#gG)" stroke="#00ff88" stroke-width="1.5" fill-opacity="1"/>
+              <path d="M0,95 C20,90 40,95 60,88 C80,81 100,86 120,80 C140,74 160,78 180,72 C200,66 220,72 240,68 C260,64 280,70 300,65 C320,60 340,58 360,54 C380,50 400,58 420,52 C440,46 460,44 480,40 C500,36 520,42 540,38 C560,34 580,32 600,30" fill="url(#gB)" stroke="#00c8ff" stroke-width="1.5" fill-opacity="1"/>
+            </svg>
+            <div class="chart-legend">
+              <div class="cleg g">HRV (ms)</div>
+              <div class="cleg b">Sleep quality</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Energy bars -->
+        <div class="panel" style="border-bottom:1px solid var(--border);">
+          <div class="panel-title">Daily Energy — Last 7 days</div>
+          <div class="energy-bars">
+            <div class="ebar" style="height:70%"></div>
+            <div class="ebar" style="height:55%"></div>
+            <div class="ebar" style="height:80%"></div>
+            <div class="ebar" style="height:65%"></div>
+            <div class="ebar" style="height:75%"></div>
+            <div class="ebar" style="height:85%"></div>
+            <div class="ebar on" style="height:90%"></div>
+          </div>
+          <div class="edays">
+            <div class="eday">Tue</div><div class="eday">Wed</div><div class="eday">Thu</div><div class="eday">Fri</div><div class="eday">Sat</div><div class="eday">Sun</div><div class="eday" style="color:var(--green)">Mon</div>
+          </div>
+        </div>
+
+        <!-- Experiments -->
+        <div class="panel">
+          <div class="panel-title">Active Experiments</div>
+          <div class="exp-list">
+            <div class="exp-card"><div class="exp-header"><div class="exp-name">Glycine → HRV</div><div class="exp-status"><div class="exp-dot"></div><span style="font-size:9px;color:var(--green)">Active</span></div></div><div class="exp-hyp">3g glycine before bed will raise 7-day HRV average by ≥10ms within 30 days.</div><div class="exp-prog"><div class="exp-fill" style="width:47%"></div></div><div class="exp-days">14 / 30 days</div></div>
+            <div class="exp-card"><div class="exp-header"><div class="exp-name">Zone2 → Resting HR</div><div class="exp-status"><div class="exp-dot"></div><span style="font-size:9px;color:var(--green)">Active</span></div></div><div class="exp-hyp">4× weekly Zone2 sessions will lower resting HR by ≥5bpm over 8 weeks.</div><div class="exp-prog"><div class="exp-fill" style="width:78%"></div></div><div class="exp-days">31 / 40 days</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div style="display:flex;flex-direction:column;gap:1px;">
+        <!-- Supplement stack -->
+        <div class="panel">
+          <div class="panel-title">Today's Stack</div>
+          <div class="supp-list">
+            <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">NMN 500mg</span><span class="supp-dose">500mg</span><span class="supp-time">AM</span></div>
+            <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">Creatine</span><span class="supp-dose">5g</span><span class="supp-time">AM</span></div>
+            <div class="supp-item"><div class="supp-check done">✓</div><span class="supp-name">D3 + K2</span><span class="supp-dose">5000IU</span><span class="supp-time">AM</span></div>
+            <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Alpha-GPC</span><span class="supp-dose">300mg</span><span class="supp-time">AM</span></div>
+            <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Mg Glycinate</span><span class="supp-dose">400mg</span><span class="supp-time">PM</span></div>
+            <div class="supp-item"><div class="supp-check"></div><span class="supp-name">Glycine</span><span class="supp-dose">3g</span><span class="supp-time">PM</span></div>
+          </div>
+        </div>
+
+        <!-- Fasting timer -->
+        <div class="panel">
+          <div class="panel-title">Fasting Timer</div>
+          <div class="fasting-card">
+            <div class="fast-label">Current fast</div>
+            <span class="fast-time" id="fastTime">16:23:41</span>
+            <div class="fast-bar"><div class="fast-fill"></div></div>
+            <div class="fast-meta"><span>Started 9:00 PM</span><span>Target: 18h</span></div>
+          </div>
+          <div style="font-size:10px;color:var(--dimmer);margin-top:10px;letter-spacing:.05em;">🔥 12-day streak</div>
+        </div>
+
+        <!-- Community benchmark -->
+        <div class="panel">
+          <div class="panel-title">vs. Community (28–35yo)</div>
+          <div class="bench-grid">
+            <div class="bench"><div class="bench-lbl">HRV</div><div class="bench-bar"><div class="bench-avg" style="width:58%"></div><div class="bench-you" style="width:87%"></div></div><div class="bench-vals"><span class="bvy">87ms</span><span class="bvc">avg 63</span></div></div>
+            <div class="bench"><div class="bench-lbl">Sleep</div><div class="bench-bar"><div class="bench-avg" style="width:60%"></div><div class="bench-you" style="width:77%"></div></div><div class="bench-vals"><span class="bvy">7h42</span><span class="bvc">avg 6h48</span></div></div>
+            <div class="bench"><div class="bench-lbl">Resting HR</div><div class="bench-bar"><div class="bench-avg" style="width:62%"></div><div class="bench-you" style="width:40%"></div></div><div class="bench-vals"><span class="bvy">48bpm</span><span class="bvc">avg 59</span></div></div>
+            <div class="bench"><div class="bench-lbl">Energy</div><div class="bench-bar"><div class="bench-avg" style="width:55%"></div><div class="bench-you" style="width:82%"></div></div><div class="bench-vals"><span class="bvy">8.2</span><span class="bvc">avg 6.1</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer><div><div class="fl">hackers.bio</div><div class="ft">Optimize everything. Trust nothing unverified.</div></div><div class="flinks"><a href="community.html">Community</a><a href="blog.html">Blog</a><a href="tracker.html">Tracker</a><a href="shop.html">Shop</a></div></footer>
+<script>(function(){
+  var c=document.getElementById('cursor'),r=document.getElementById('ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=(mx-4)+'px';c.style.top=(my-4)+'px';});
+  (function loop(){rx+=(mx-rx-14)*0.12;ry+=(my-ry-14)*0.12;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){c.style.transform='scale(2)';r.style.borderColor='rgba(0,255,136,0.8)';});
+    el.addEventListener('mouseleave',function(){c.style.transform='scale(1)';r.style.borderColor='rgba(0,255,136,0.35)';});
+  });
+  var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.04});
+  document.querySelectorAll('.fi').forEach(function(el){obs.observe(el);});
+})();
+
+// Fasting timer
+var startTime = Date.now() - (16*3600+23*60+41)*1000;
+function updateTimer(){
+  var elapsed = Math.floor((Date.now()-startTime)/1000);
+  var h=Math.floor(elapsed/3600), m=Math.floor((elapsed%3600)/60), s=elapsed%60;
+  var el=document.getElementById('fastTime');
+  if(el) el.textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  setTimeout(updateTimer,1000);
+}
+updateTimer();
+
+// Log panel
+function openLog(){
+  document.getElementById('logPanel').classList.add('open');
+  document.getElementById('logOverlay').classList.add('open');
+}
+function closeLog(){
+  document.getElementById('logPanel').classList.remove('open');
+  document.getElementById('logOverlay').classList.remove('open');
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLog();});
+
+// Log tabs
+document.querySelectorAll('.log-tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.log-tab').forEach(function(x){x.classList.remove('on');});
+    document.querySelectorAll('.log-section').forEach(function(x){x.style.display='none';});
+    t.classList.add('on');
+    var sec=document.getElementById('sec-'+t.dataset.sec);
+    if(sec) sec.style.display='block';
+  });
+});
+
+// Supp checkboxes
+document.querySelectorAll('.supp-item').forEach(function(item){
+  item.addEventListener('click',function(){
+    var cb=this.querySelector('.supp-check');
+    cb.classList.toggle('done');
+    cb.textContent=cb.classList.contains('done')?'✓':'';
+  });
+});
+
+// Period tabs
+document.querySelectorAll('.ptab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.ptab').forEach(function(x){x.classList.remove('on');});
+    t.classList.add('on');
+  });
+});
+
+// Save toast
+document.querySelectorAll('.log-save').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    closeLog();
+    var toast=document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(function(){toast.classList.remove('show');},2600);
+  });
+});
+
+// Sliders
+document.querySelectorAll('.log-slider').forEach(function(s){
+  s.addEventListener('input',function(){
+    var v=document.getElementById('val-'+this.id);
+    if(v) v.textContent=this.value+(this.dataset.unit||'');
+  });
+});
+</script>
+</body>
+</html>

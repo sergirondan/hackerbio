@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community — hackers.bio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>:root{--black:#060608;--deep:#0a0b0f;--surface:#0f1117;--card:#0d0f14;--border:#1a1d26;--green:#00ff88;--green-faint:rgba(0,255,136,0.05);--blue:#00c8ff;--orange:#ff8c42;--text:#e8eaf0;--muted:#6b7280;--dimmer:#3d4350;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'DM Mono',monospace;overflow-x:hidden;cursor:none;}
+.cursor{width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform 0.1s;box-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,136,0.3);}
+.cursor-ring{width:28px;height:28px;border:1px solid rgba(0,255,136,0.35);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:all 0.14s;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.025) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(6,6,8,0.92);backdrop-filter:blur(24px);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--green);text-decoration:none;}.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:36px;list-style:none;}.nav-links a{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.nav-links a:hover{color:var(--text);}.nav-links a.active{color:var(--green);}
+.nav-cta{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--black);background:var(--green);border:none;padding:9px 20px;cursor:none;font-weight:700;transition:background 0.2s;}.nav-cta:hover{background:#fff;}
+.btn-g{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--green);border:none;padding:14px 28px;text-decoration:none;cursor:none;transition:all 0.2s;display:inline-block;}.btn-g:hover{background:#fff;transform:translateY(-1px);}
+.btn-o{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:13px 24px;text-decoration:none;transition:all 0.2s;cursor:none;display:inline-block;}.btn-o:hover{color:var(--text);border-color:var(--dimmer);}
+.slabel{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:10px;}.slabel::before{content:'';width:20px;height:1px;background:var(--green);display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.fi{opacity:0;transform:translateY(16px);transition:opacity 0.55s ease,transform 0.55s ease;}.fi.vis{opacity:1;transform:none;}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.fl{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--green);margin-bottom:5px;}.ft{font-size:10px;color:var(--dimmer);letter-spacing:0.07em;}
+.flinks{display:flex;gap:28px;}.flinks a{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.flinks a:hover{color:var(--green);}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--border);}::-webkit-scrollbar-thumb:hover{background:var(--green);}
+
+.page-hdr{padding:130px 48px 72px;position:relative;z-index:1;overflow:hidden;border-bottom:1px solid var(--border);}
+.page-hdr::after{content:'COMMUNITY';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Instrument Serif',serif;font-size:200px;color:transparent;-webkit-text-stroke:1px var(--border);pointer-events:none;line-height:1;letter-spacing:-.05em;}
+.ph-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--green);margin-bottom:18px;display:flex;align-items:center;gap:10px;opacity:0;animation:fadeUp .6s ease forwards .15s;}.ph-label::before{content:'';width:26px;height:1px;background:var(--green);display:block;}
+.ph-title{font-family:'Instrument Serif',serif;font-size:clamp(44px,7vw,88px);line-height:.93;letter-spacing:-.03em;margin-bottom:22px;opacity:0;animation:fadeUp .6s ease forwards .28s;}.ph-title em{font-style:italic;color:var(--green);}
+.ph-desc{font-size:13px;line-height:1.85;color:var(--muted);max-width:460px;opacity:0;animation:fadeUp .6s ease forwards .42s;}
+/* live stats */
+.live-bar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);background:var(--deep);position:relative;z-index:1;}
+.lstat{padding:22px 32px;border-right:1px solid var(--border);}
+.lstat:last-child{border-right:none;}
+.lstat-val{font-family:'Space Mono',monospace;font-size:24px;color:var(--green);display:block;letter-spacing:-.04em;margin-bottom:4px;}
+.lstat-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 1.5s ease infinite;margin-right:6px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+/* reasons */
+.reasons-sec{padding:96px 48px;background:var(--deep);position:relative;z-index:1;}
+.reasons-title{font-family:'Instrument Serif',serif;font-size:clamp(30px,4vw,52px);line-height:1.05;letter-spacing:-.025em;max-width:520px;margin-bottom:52px;}
+.reasons-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.reason{background:var(--deep);padding:36px 30px;}
+.reason-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--dimmer);margin-bottom:20px;letter-spacing:.1em;}
+.reason-icon{font-size:22px;margin-bottom:14px;display:block;}
+.reason-title{font-size:14px;color:var(--text);margin-bottom:10px;}
+.reason-desc{font-size:11px;color:var(--muted);line-height:1.8;}
+/* discord mockup */
+.discord-sec{padding:96px 48px;position:relative;z-index:1;}
+.discord-sec-title{font-family:'Instrument Serif',serif;font-size:clamp(30px,4vw,52px);line-height:1.05;letter-spacing:-.025em;margin-bottom:40px;}
+.discord-sec-title em{font-style:italic;color:var(--green);}
+.discord-app{background:#1e2124;border:1px solid #2a2d35;overflow:hidden;max-width:900px;}
+.da-top{background:#17191c;padding:12px 18px;border-bottom:1px solid #2a2d35;display:flex;align-items:center;gap:10px;}
+.da-icon{width:30px;height:30px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#000;font-weight:700;font-family:'Space Mono',monospace;}
+.da-name{font-size:13px;font-weight:700;color:#fff;font-family:sans-serif;}
+.da-online{font-size:10px;color:#43b581;margin-left:auto;font-family:sans-serif;}
+.da-body{display:grid;grid-template-columns:200px 1fr;}
+.da-sidebar{background:#1a1c1f;border-right:1px solid #2a2d35;padding:12px 0;}
+.da-cat{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:#4f545c;padding:12px 12px 4px 16px;font-family:sans-serif;}
+.da-ch{font-size:12px;color:#72767d;padding:5px 8px 5px 16px;font-family:sans-serif;display:flex;align-items:center;justify-content:space-between;transition:all .15s;cursor:none;}.da-ch:hover{color:#fff;background:rgba(255,255,255,.04);}.da-ch.on{color:#fff;background:rgba(255,255,255,.08);}
+.da-badge{background:#ed4245;color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:1px 5px;}
+.da-chat{padding:20px;background:#36393f;min-height:380px;display:flex;flex-direction:column;gap:16px;}
+.da-msg{display:flex;gap:13px;}
+.da-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.da-right{flex:1;}
+.da-header{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
+.da-mname{font-size:13px;font-weight:700;color:#fff;font-family:sans-serif;}
+.da-ts{font-size:10px;color:#72767d;font-family:sans-serif;}
+.da-text{font-size:13px;color:#dcddde;line-height:1.55;font-family:sans-serif;}.da-text .g{color:var(--green);font-weight:600;}.da-text .b{color:var(--blue);}
+.da-text code{background:#2f3136;padding:2px 6px;border-radius:3px;font-size:11px;font-family:'Space Mono',monospace;color:#dcddde;}
+.da-reactions{display:flex;gap:6px;margin-top:6px;}
+.da-react{background:#2f3136;border-radius:4px;padding:3px 7px;font-size:11px;font-family:sans-serif;color:#dcddde;cursor:none;transition:background .15s;}.da-react:hover{background:#40444b;}
+/* tabs */
+.ch-tabs{display:flex;border-bottom:1px solid #2a2d35;}
+.ch-tab{font-size:11px;color:#72767d;padding:12px 16px;background:none;border:none;cursor:none;font-family:sans-serif;border-bottom:2px solid transparent;transition:all .2s;}.ch-tab:hover{color:#fff;}.ch-tab.on{color:#fff;border-bottom-color:var(--green);}
+/* channels explain */
+.channels-sec{padding:96px 48px;background:var(--deep);position:relative;z-index:1;}
+.ch-explain-title{font-family:'Instrument Serif',serif;font-size:clamp(28px,3.5vw,46px);line-height:1.05;letter-spacing:-.025em;margin-bottom:44px;}
+.ch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.ch-card{background:var(--deep);padding:28px 24px;}
+.ch-name{font-size:12px;color:var(--green);margin-bottom:8px;font-family:'Space Mono',monospace;}
+.ch-desc{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:12px;}
+.ch-activity{font-size:9px;letter-spacing:.07em;color:var(--dimmer);}
+/* final CTA */
+.join-cta{padding:120px 48px;text-align:center;position:relative;z-index:1;overflow:hidden;}
+.join-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,255,136,.055) 0%,transparent 60%);pointer-events:none;}
+.jc-title{font-family:'Instrument Serif',serif;font-size:clamp(32px,5vw,68px);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px;}.jc-title em{font-style:italic;color:var(--green);}
+.jc-sub{font-size:13px;color:var(--muted);max-width:440px;margin:0 auto 44px;line-height:1.85;}
+.jc-members{display:flex;justify-content:center;margin-bottom:32px;}
+.jc-av{width:36px;height:36px;border-radius:50%;border:2px solid var(--black);margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.jc-count{font-size:11px;color:var(--muted);margin-left:16px;letter-spacing:.04em;align-self:center;}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav><a href="index.html" class="nav-logo">hackers<span>.bio</span></a><ul class="nav-links"><li><a href="community.html" class="active">Community</a></li><li><a href="blog.html">Research</a></li><li><a href="tracker.html">Track</a></li><li><a href="shop.html">Shop</a></li></ul><button class="nav-cta" onclick="location.href='tracker.html'">Join Free</button></nav>
+
+<div class="page-hdr">
+  <div class="ph-label">12,400+ members · 34 countries</div>
+  <h1 class="ph-title">Find your people.<br><em>Finally.</em></h1>
+  <p class="ph-desc">A Discord server where people share actual lab results, argue about protocols with citations, and run 30-day challenges together. Evidence-based by culture, not by rule.</p>
+</div>
+
+<div class="live-bar">
+  <div class="lstat"><span class="lstat-val"><span class="live-dot"></span><span id="onlineCount">847</span></span><span class="lstat-label">Online now</span></div>
+  <div class="lstat"><span class="lstat-val">12,400</span><span class="lstat-label">Total members</span></div>
+  <div class="lstat"><span class="lstat-val">2,100</span><span class="lstat-label">Messages / week</span></div>
+  <div class="lstat"><span class="lstat-val">34</span><span class="lstat-label">Countries</span></div>
+</div>
+
+<section class="reasons-sec fi">
+  <h2 class="reasons-title">Why biohackers actually stay.</h2>
+  <div class="reasons-grid">
+    <div class="reason"><div class="reason-num">01</div><span class="reason-icon">🧪</span><div class="reason-title">Evidence-based by culture</div><div class="reason-desc">Anecdotes are welcome, but they're labelled. Claims get citations requested. The culture self-regulates.</div></div>
+    <div class="reason"><div class="reason-num">02</div><span class="reason-icon">📊</span><div class="reason-title">Real lab data, not theory</div><div class="reason-desc">Members share actual blood panels, Oura screenshots, and CGM traces. The signal-to-noise is unusually high.</div></div>
+    <div class="reason"><div class="reason-num">03</div><span class="reason-icon">🚫</span><div class="reason-title">No selling, ever</div><div class="reason-desc">Affiliate links, sponsor pitches, and supplement promotions are grounds for removal. Always.</div></div>
+    <div class="reason"><div class="reason-num">04</div><span class="reason-icon">🔬</span><div class="reason-title">Shared protocols</div><div class="reason-desc">Find validated N=1 protocols for sleep, cognition, longevity, and performance — built by the community.</div></div>
+    <div class="reason"><div class="reason-num">05</div><span class="reason-icon">🏆</span><div class="reason-title">Accountability challenges</div><div class="reason-desc">Monthly challenges with real tracking. Zone 2 in April. Cold exposure in January. HRV in November.</div></div>
+    <div class="reason"><div class="reason-num">06</div><span class="reason-icon">🩺</span><div class="reason-title">Expert members</div><div class="reason-desc">Several MDs, PhDs, and coaches participate. They're here because the conversation quality is worth their time.</div></div>
+  </div>
+</section>
+
+<section class="discord-sec fi">
+  <h2 class="discord-sec-title">A community that<br>actually <em>talks data.</em></h2>
+  <div class="discord-app">
+    <div class="da-top">
+      <div class="da-icon">H</div>
+      <div class="da-name">hackers.bio</div>
+      <div class="da-online">● 847 online</div>
+    </div>
+    <div class="da-body">
+      <div class="da-sidebar">
+        <div class="da-cat">Science Channels</div>
+        <div class="da-ch on"># sleep-hrv <span class="da-badge">12</span></div>
+        <div class="da-ch"># longevity</div>
+        <div class="da-ch"># stacks <span class="da-badge">4</span></div>
+        <div class="da-ch"># nootropics</div>
+        <div class="da-cat">Training</div>
+        <div class="da-ch"># zone2-april 🏃</div>
+        <div class="da-ch"># fitness</div>
+        <div class="da-cat">Labs</div>
+        <div class="da-ch"># share-your-labs</div>
+        <div class="da-ch"># interpret-my-panel</div>
+        <div class="da-cat">General</div>
+        <div class="da-ch"># intros</div>
+        <div class="da-ch"># off-topic</div>
+      </div>
+      <div style="display:flex;flex-direction:column;flex:1;">
+        <div class="ch-tabs">
+          <button class="ch-tab on"># sleep-hrv</button>
+          <button class="ch-tab"># longevity</button>
+          <button class="ch-tab"># stacks</button>
+        </div>
+        <div class="da-chat">
+          <div class="da-msg">
+            <div class="da-av" style="background:#2d4a3e">🧬</div>
+            <div class="da-right">
+              <div class="da-header"><span class="da-mname">sara_optimized</span><span class="da-ts">Today at 9:14 AM</span></div>
+              <div class="da-text">6-week update on the sleep protocol: HRV went from <span class="g">52 → 81ms</span>. Main changes: Mg glycinate 400mg PM, glycine 3g PM, blackout curtains, room temp dropped to 19°C. No other major changes.</div>
+              <div class="da-reactions"><span class="da-react">📈 24</span><span class="da-react">🧬 18</span><span class="da-react">🔥 11</span></div>
+            </div>
+          </div>
+          <div class="da-msg">
+            <div class="da-av" style="background:#1a3a2a">🔬</div>
+            <div class="da-right">
+              <div class="da-header"><span class="da-mname">dr_kovalev</span><span class="da-ts">Today at 9:22 AM</span></div>
+              <div class="da-text">Good result. For HRV specifically, glycine has stronger mechanistic support than Mg — it works by lowering core body temp via peripheral vasodilation (Bannai 2012). The <span class="g">3g dose</span> is what the RCT used. Are you measuring HRV at the same time each morning?</div>
+              <div class="da-reactions"><span class="da-react">💡 15</span></div>
+            </div>
+          </div>
+          <div class="da-msg">
+            <div class="da-av" style="background:#2d4a3e">🧬</div>
+            <div class="da-right">
+              <div class="da-header"><span class="da-mname">sara_optimized</span><span class="da-ts">Today at 9:25 AM</span></div>
+              <div class="da-text">Yes — Oura ring, always within 5min of waking before getting up. Same protocol every day. The consistency is what makes it useful imo</div>
+            </div>
+          </div>
+          <div class="da-msg">
+            <div class="da-av" style="background:#3a2010">⚡</div>
+            <div class="da-right">
+              <div class="da-header"><span class="da-mname">quantified_kai</span><span class="da-ts">Today at 9:31 AM</span></div>
+              <div class="da-text">Zone2 April challenge update 📊<br>Group avg VO2max improvement: <span class="g">+4.2 ml/kg/min</span> after 3 weeks<br>Avg sessions/week: 3.2 (target was 4)<br>Biggest mover: <span class="b">nadia_biohacks</span> +7.1 ml/kg/min 🏆<br>Still time to join — <code>#zone2-april</code></div>
+              <div class="da-reactions"><span class="da-react">🏃 31</span><span class="da-react">📊 22</span><span class="da-react">🔥 18</span></div>
+            </div>
+          </div>
+          <div class="da-msg">
+            <div class="da-av" style="background:#1a2a3a">💊</div>
+            <div class="da-right">
+              <div class="da-header"><span class="da-mname">nadia_biohacks</span><span class="da-ts">Today at 9:38 AM</span></div>
+              <div class="da-text">lol that's because I literally banned myself from the couch until sessions are done 😅 but seriously the HRV correlation is insane — <span class="g">every zone2 session shows up</span> in my next-morning HRV. lag is about 36-48h</div>
+              <div class="da-reactions"><span class="da-react">😂 14</span><span class="da-react">📈 9</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="channels-sec fi">
+  <h2 class="ch-explain-title">Every channel has a purpose.</h2>
+  <div class="ch-grid">
+    <div class="ch-card"><div class="ch-name"># sleep-hrv</div><div class="ch-desc">Sleep architecture, HRV protocols, wearable comparisons, and recovery optimization.</div><div class="ch-activity">⬤ Very active</div></div>
+    <div class="ch-card"><div class="ch-name"># longevity</div><div class="ch-desc">mTOR, autophagy, NAD+, senescence, and the full longevity research landscape.</div><div class="ch-activity">⬤ Active</div></div>
+    <div class="ch-card"><div class="ch-name"># stacks</div><div class="ch-desc">Supplement stack sharing, timing protocols, and sourcing. Evidence-level ratings required.</div><div class="ch-activity">⬤ Very active</div></div>
+    <div class="ch-card"><div class="ch-name"># nootropics</div><div class="ch-desc">Cognitive enhancers, racetams, adaptogens. Strict evidence standards enforced here.</div><div class="ch-activity">⬤ Active</div></div>
+    <div class="ch-card"><div class="ch-name"># zone2-april</div><div class="ch-desc">Monthly challenge channel. 4x/week Zone 2 sessions, VO2max tracking, group accountability.</div><div class="ch-activity">🏃 Challenge live</div></div>
+    <div class="ch-card"><div class="ch-name"># share-your-labs</div><div class="ch-desc">Post your blood panels. Community members and MDs help interpret. Anonymization encouraged.</div><div class="ch-activity">⬤ Moderate</div></div>
+    <div class="ch-card"><div class="ch-name"># interpret-my-panel</div><div class="ch-desc">Specific questions about lab results. Always include reference ranges and context.</div><div class="ch-activity">⬤ Moderate</div></div>
+    <div class="ch-card"><div class="ch-name"># protocols</div><div class="ch-desc">Full written protocols: fasting, cold exposure, sauna, sleep, cognitive — community-tested and rated.</div><div class="ch-activity">⬤ Active</div></div>
+  </div>
+</section>
+
+<section class="join-cta fi">
+  <div class="jc-members">
+    <div class="jc-av" style="background:#2d4a3e;z-index:5">🧬</div>
+    <div class="jc-av" style="background:#1a3a2a;z-index:4">🔬</div>
+    <div class="jc-av" style="background:#3a2010;z-index:3">⚡</div>
+    <div class="jc-av" style="background:#1a2a3a;z-index:2">💊</div>
+    <div class="jc-av" style="background:#2a1a3a;z-index:1">🏃</div>
+    <div class="jc-count">+12,395 members</div>
+  </div>
+  <h2 class="jc-title">Ready to stop<br>optimizing <em>alone?</em></h2>
+  <p class="jc-sub">Free to join. No gimmicks. Just 12,400+ people who actually care about the evidence.</p>
+  <a href="#" class="btn-g">Join Discord Free →</a>
+</section>
+
+<footer><div><div class="fl">hackers.bio</div><div class="ft">Optimize everything. Trust nothing unverified.</div></div><div class="flinks"><a href="community.html">Community</a><a href="blog.html">Blog</a><a href="tracker.html">Tracker</a><a href="shop.html">Shop</a></div></footer>
+<script>(function(){
+  var c=document.getElementById('cursor'),r=document.getElementById('ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=(mx-4)+'px';c.style.top=(my-4)+'px';});
+  (function loop(){rx+=(mx-rx-14)*0.12;ry+=(my-ry-14)*0.12;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){c.style.transform='scale(2)';r.style.borderColor='rgba(0,255,136,0.8)';});
+    el.addEventListener('mouseleave',function(){c.style.transform='scale(1)';r.style.borderColor='rgba(0,255,136,0.35)';});
+  });
+  var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.04});
+  document.querySelectorAll('.fi').forEach(function(el){obs.observe(el);});
+})();
+
+// Animate online count
+var count = 847;
+setInterval(function(){
+  count += Math.round((Math.random()-0.4)*3);
+  if(count<800)count=800;if(count>1200)count=1200;
+  var el=document.getElementById('onlineCount');
+  if(el)el.textContent=count;
+},3000);
+
+// Channel tabs
+document.querySelectorAll('.ch-tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.ch-tab').forEach(function(x){x.classList.remove('on');});
+    t.classList.add('on');
+  });
+});
+
+// Discord channel click
+document.querySelectorAll('.da-ch').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.da-ch').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

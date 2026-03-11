@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Shop — hackers.bio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>:root{--black:#060608;--deep:#0a0b0f;--surface:#0f1117;--card:#0d0f14;--border:#1a1d26;--green:#00ff88;--green-faint:rgba(0,255,136,0.05);--blue:#00c8ff;--orange:#ff8c42;--text:#e8eaf0;--muted:#6b7280;--dimmer:#3d4350;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'DM Mono',monospace;overflow-x:hidden;cursor:none;}
+.cursor{width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform 0.1s;box-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,136,0.3);}
+.cursor-ring{width:28px;height:28px;border:1px solid rgba(0,255,136,0.35);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:all 0.14s;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.025) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(6,6,8,0.92);backdrop-filter:blur(24px);}
+.nav-logo{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--green);text-decoration:none;}.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:36px;list-style:none;}.nav-links a{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.nav-links a:hover{color:var(--text);}.nav-links a.active{color:var(--green);}
+.nav-cta{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--black);background:var(--green);border:none;padding:9px 20px;cursor:none;font-weight:700;transition:background 0.2s;}.nav-cta:hover{background:#fff;}
+.btn-g{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--green);border:none;padding:14px 28px;text-decoration:none;cursor:none;transition:all 0.2s;display:inline-block;}.btn-g:hover{background:#fff;transform:translateY(-1px);}
+.btn-o{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:13px 24px;text-decoration:none;transition:all 0.2s;cursor:none;display:inline-block;}.btn-o:hover{color:var(--text);border-color:var(--dimmer);}
+.slabel{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:10px;}.slabel::before{content:'';width:20px;height:1px;background:var(--green);display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.fi{opacity:0;transform:translateY(16px);transition:opacity 0.55s ease,transform 0.55s ease;}.fi.vis{opacity:1;transform:none;}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.fl{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--green);margin-bottom:5px;}.ft{font-size:10px;color:var(--dimmer);letter-spacing:0.07em;}
+.flinks{display:flex;gap:28px;}.flinks a{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.flinks a:hover{color:var(--green);}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--border);}::-webkit-scrollbar-thumb:hover{background:var(--green);}
+
+.soon-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 48px 80px;position:relative;z-index:1;overflow:hidden;}
+.sglow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(255,140,66,.07) 0%,transparent 65%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:sp 8s ease-in-out infinite;}
+@keyframes sp{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12);}}
+.sbrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0;animation:fadeUp .6s ease forwards .2s;}
+.sbrow::before,.sbrow::after{content:'';width:32px;height:1px;background:var(--orange);display:block;}
+.stitle{font-family:'Instrument Serif',serif;font-size:clamp(48px,8vw,108px);line-height:.92;letter-spacing:-.03em;margin-bottom:26px;opacity:0;animation:fadeUp .6s ease forwards .35s;}
+.stitle em{font-style:italic;color:var(--orange);}.stitle .ghost{-webkit-text-stroke:1px var(--dimmer);color:transparent;}
+.ssub{font-size:13px;line-height:1.9;color:var(--muted);max-width:500px;margin:0 auto 40px;opacity:0;animation:fadeUp .6s ease forwards .5s;}
+.sprogress{width:320px;margin:0 auto 12px;opacity:0;animation:fadeUp .6s ease forwards .65s;}
+.plabels{display:flex;justify-content:space-between;font-size:10px;color:var(--dimmer);letter-spacing:.07em;margin-bottom:7px;}
+.pbar{height:2px;background:var(--border);position:relative;overflow:hidden;}
+.pfill{position:absolute;top:0;left:0;height:100%;background:var(--orange);animation:pf 2s ease forwards 1s;width:0;}
+@keyframes pf{to{width:68%;}}
+.sdate{font-size:10px;color:var(--dimmer);letter-spacing:.07em;margin-bottom:36px;opacity:0;animation:fadeUp .6s ease forwards .72s;}
+.snotify{display:flex;max-width:400px;margin:0 auto 80px;opacity:0;animation:fadeUp .6s ease forwards .82s;}
+.nemail{flex:1;background:var(--surface);border:1px solid var(--border);border-right:none;padding:13px 15px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;transition:border-color .2s;}.nemail:focus{border-color:var(--orange);}.nemail::placeholder{color:var(--dimmer);}
+.nbtn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--orange);border:none;padding:13px 20px;cursor:none;transition:background .2s;white-space:nowrap;}.nbtn:hover{background:#fff;}
+/* pillars */
+.spils{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);max-width:860px;width:100%;margin-bottom:80px;}
+.spil{background:var(--deep);padding:32px 28px;text-align:left;}
+.spicon{font-size:20px;margin-bottom:13px;display:block;}
+.spname{font-size:12px;color:var(--text);margin-bottom:7px;}
+.spdesc{font-size:11px;color:var(--muted);line-height:1.7;}
+/* product preview (blurred) */
+.spprev{max-width:860px;width:100%;}
+.splabel{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:22px;text-align:center;}
+.spgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);filter:blur(1.5px);opacity:.35;pointer-events:none;}
+.spcard{background:var(--card);padding:26px 22px;}
+.spemoji{font-size:26px;display:block;margin-bottom:12px;}
+.spcat{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.spname2{font-family:'Instrument Serif',serif;font-size:17px;margin-bottom:7px;}
+.spprice{font-family:'Space Mono',monospace;font-size:15px;color:var(--orange);}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+<nav><a href="index.html" class="nav-logo">hackers<span>.bio</span></a><ul class="nav-links"><li><a href="community.html">Community</a></li><li><a href="blog.html">Research</a></li><li><a href="tracker.html">Track</a></li><li><a href="shop.html" class="active">Shop</a></li></ul><button class="nav-cta" onclick="location.href='tracker.html'">Join Free</button></nav>
+
+<div class="soon-wrap">
+  <div class="sglow"></div>
+  <div class="sbrow">Coming Soon</div>
+  <h1 class="stitle">Built on <em>evidence.</em><br><span class="ghost">Not</span> marketing.</h1>
+  <p class="ssub">We're building a supplement shop that actually deserves to exist. Every product third-party tested, at clinically effective doses, with the research linked directly on the product page. No proprietary blends. No inflated margins. No BS.</p>
+  <div class="sprogress">
+    <div class="plabels"><span>Development progress</span><span>68%</span></div>
+    <div class="pbar"><div class="pfill"></div></div>
+  </div>
+  <div class="sdate">Expected launch · Q2 2026</div>
+  <div class="snotify">
+    <input type="email" class="nemail" placeholder="your@email.com">
+    <button class="nbtn">Notify Me →</button>
+  </div>
+  <div class="spils fi">
+    <div class="spil"><span class="spicon">🧪</span><div class="spname">Third-party COA on every batch</div><div class="spdesc">Independent lab testing for purity, potency, and heavy metals. Certificate downloadable before purchase.</div></div>
+    <div class="spil"><span class="spicon">📊</span><div class="spname">Evidence-linked products</div><div class="spdesc">Every page includes the clinical dose from the key human RCT and why we chose this form over alternatives.</div></div>
+    <div class="spil"><span class="spicon">🚫</span><div class="spname">Zero proprietary blends</div><div class="spdesc">You'll see exactly what's in every capsule. No "matrix complexes" hidden behind a blend name.</div></div>
+  </div>
+  <div class="spprev fi">
+    <div class="splabel">Products in development</div>
+    <div class="spgrid">
+      <div class="spcard"><span class="spemoji">⚡</span><div class="spcat">Longevity</div><div class="spname2">NMN 500mg</div><div class="spprice">€49</div></div>
+      <div class="spcard"><span class="spemoji">💪</span><div class="spcat">Performance</div><div class="spname2">Creatine Monohydrate</div><div class="spprice">€22</div></div>
+      <div class="spcard"><span class="spemoji">🧠</span><div class="spcat">Cognition</div><div class="spname2">Lion's Mane Extract</div><div class="spprice">€34</div></div>
+      <div class="spcard"><span class="spemoji">🌙</span><div class="spcat">Sleep</div><div class="spname2">Magnesium Glycinate</div><div class="spprice">€28</div></div>
+    </div>
+  </div>
+</div>
+
+<footer><div><div class="fl">hackers.bio</div><div class="ft">Optimize everything. Trust nothing unverified.</div></div><div class="flinks"><a href="community.html">Community</a><a href="blog.html">Blog</a><a href="tracker.html">Tracker</a><a href="shop.html">Shop</a></div></footer>
+<script>(function(){
+  var c=document.getElementById('cursor'),r=document.getElementById('ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=(mx-4)+'px';c.style.top=(my-4)+'px';});
+  (function loop(){rx+=(mx-rx-14)*0.12;ry+=(my-ry-14)*0.12;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){c.style.transform='scale(2)';r.style.borderColor='rgba(0,255,136,0.8)';});
+    el.addEventListener('mouseleave',function(){c.style.transform='scale(1)';r.style.borderColor='rgba(0,255,136,0.35)';});
+  });
+  var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.04});
+  document.querySelectorAll('.fi').forEach(function(el){obs.observe(el);});
+})();
+
+document.querySelector('.nbtn').addEventListener('click',function(){
+  var el=document.querySelector('.nemail');
+  if(el.value.includes('@')){
+    this.textContent='✓ On the list';this.style.background='var(--green)';
+    el.value='';el.placeholder="You're on the list!";
+  }
+});
+</script>
+</body>
+</html>
